@@ -152,7 +152,161 @@ Budget (Optional)
 
 API Subscription: $50–$100/month (if using paid APIs).
 
-Development Tools: Free or licensed software costs.
 
-Hosting Services: $20–$50/month.
-Total (approximate): $100–$200/month.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <header>
+      <h1>Weather App</h1>
+      <p>Get real-time weather updates</p>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search">
+      <input type="text" id="city" placeholder="Enter city name" />
+      <button onclick="getWeather()">Get Weather</button>
+    </section>
+
+    <!-- Current Weather Section -->
+    <section class="current-weather" id="weather">
+      <h2>Current Weather</h2>
+      <div class="weather-info">
+        <div class="temperature">
+          <span id="temp">--°C</span>
+          <p id="description">--</p>
+        </div>
+        <div class="details">
+          <p>Humidity: <span id="humidity">--%</span></p>
+          <p>Wind Speed: <span id="wind">-- km/h</span></p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+CSS
+
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #87CEEB, #FFFFFF);
+  color: #333;
+  text-align: center;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header Section */
+header {
+  background-color: #007BFF;
+  color: #FFF;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5em;
+}
+
+header p {
+  margin: 5px 0 0;
+  font-size: 1.2em;
+}
+
+/* Search Section */
+.search {
+  margin: 20px 0;
+}
+
+.search input {
+  padding: 10px;
+  width: 70%;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+}
+
+.search button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #007BFF;
+  color: #FFF;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search button:hover {
+  background-color: #0056b3;
+}
+
+/* Current Weather Section */
+.current-weather {
+  margin: 20px 0;
+  padding: 20px;
+  background: #F1F1F1;
+  border-radius: 10px;
+}
+
+.weather-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.temperature {
+  font-size: 2em;
+}
+
+.details {
+  text-align: left;
+  font-size: 1em;
+}
+
+
+// Replace this with your OpenWeatherMap API Key
+const API_KEY = "YOUR_API_KEY";
+
+async function getWeather() {
+  const city = document.getElementById("city").value;
+  if (!city) {
+    alert("Please enter a city name!");
+    return;
+  }
+
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) throw new Error("City not found!");
+
+    const data = await response.json();
+    updateWeather(data);
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+function updateWeather(data) {
+  document.getElementById("temp").textContent = `${data.main.temp}°C`;
+  document.getElementById("description").textContent = data.weather[0].description;
+  document.getElementById("humidity").textContent = `${data.main.humidity}%`;
+  document.getElementById("wind").textContent = `${data.wind.speed} km/h`;
+}
